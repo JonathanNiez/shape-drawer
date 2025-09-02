@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Canvas from "./components/Canvas";
+import Sidebar from "./components/Sidebar";
 
-function App() {
+const App = () => {
+  const [shapes, setShapes] = useState([]);
+  const [selectedType, setSelectedType] = useState("circle");
+  const [selectedColor, setSelectedColor] = useState("#3498db");
+  const [selectedSize, setSelectedSize] = useState(40);
+
+  const addShape = (x, y) => {
+    const newShape = {
+      id: Date.now(),
+      type: selectedType,
+      color: selectedColor,
+      size: selectedSize,
+      x,
+      y,
+    };
+    setShapes([...shapes, newShape]);
+  };
+
+  const updateShapePosition = (id, x, y) => {
+    setShapes((prevShapes) =>
+      prevShapes.map((shape) => (shape.id === id ? { ...shape, x, y } : shape))
+    );
+  };
+
+  const clearShapes = () => setShapes([]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Sidebar
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        selectedSize={selectedSize}
+        setSelectedSize={setSelectedSize}
+        clearShapes={clearShapes}
+      />
+      <Canvas
+        shapes={shapes}
+        addShape={addShape}
+        updateShapePosition={updateShapePosition}
+      />
     </div>
   );
-}
+};
 
 export default App;
